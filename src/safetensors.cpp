@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <array>
 #include <cctype>
+#include <climits>
 #include <cstdint>
 #include <cstring>
 #include <fstream>
@@ -919,4 +920,41 @@ namespace safetensors
         }
     }
 
+    cum::Tensor load_safetensor(const std::string& filename, const std::string& id)
+    {
+        auto tensors = load_safetensors(filename);
+        auto it = tensors.find(id);
+        if (it == tensors.end())
+        {
+            throw std::runtime_error(
+                "Tensor with id '" + id + "' not found in " + filename);
+        }
+        return std::move(it->second);
+    }
+
+    cum::Tensor load_safetensor(const std::string& filename)
+    {
+        auto tensors = load_safetensors(filename);
+        if (tensors.empty())
+        {
+            throw std::runtime_error(
+                "No tensors found in " + filename);
+        }
+        if (tensors.size() > 1)
+        {
+            throw std::runtime_error(
+                "Multiple tensors found in " + filename + ", expected exactly one");
+        }
+        return std::move(tensors.begin()->second);
+    }
+
+    void save_safetensor(const cum::Tensor& tensor, const std::string& filename, const std::string& metadata)
+    {
+        std::unordered_map<std::string, std::string> meta;
+        if (!metadata.empty())
+        {
+            meta["metadata"] = metadata;
+        }
+        save_safetensors({{"tensor", tensor}}, filename, meta);
+    }
 }

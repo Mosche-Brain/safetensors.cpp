@@ -8,6 +8,7 @@
 #include <cum/cum.hpp>
 #include <safetensors.hpp>
 
+#include <filesystem>
 #include <print>
 
 int main()
@@ -25,9 +26,15 @@ int main()
 
     cum::Tensor temsor = safetensors::load_safetensor("tensor.safetensors"); // For files containing one tensor passing ID isn't necessary
 
-    bool are_equal = tensor == temsor;
+    const bool is_equal = (tensor == temsor);
+    std::filesystem::remove("tensor.safetensors");
 
-    are_equal ? std::println("git") : std::println("nie git");
+    if (is_equal)
+    {
+        std::println("git");
+        return 0;
+    }
 
-    return 0;
+    std::println("nie git");
+    return 1;
 }

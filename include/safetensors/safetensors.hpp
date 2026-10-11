@@ -2,6 +2,9 @@
 
 #pragma once
 
+#include <array>
+#include <cstddef>
+#include <string>
 #include <unordered_map>
 
 #include <cum/datatypes.hpp>

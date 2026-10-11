@@ -1,0 +1,9 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+find_dependency(cum REQUIRED)
+
+include("${CMAKE_CURRENT_LIST_DIR}/safetensorsTargets.cmake")
+
+check_required_components(safetensors)
